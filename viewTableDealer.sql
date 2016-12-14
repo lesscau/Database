@@ -145,17 +145,21 @@ CREATE VIEW top5engine AS
 --select * from top5engine;
 
 --	Вывести 10 клиентов, которые совершили повторный заказ на большую сумму
+CREATE VIEW top10idclients AS
+	SELECT s1.id_client, s1.totalPrice, s1.dat
+	FROM sale as s1, sale as s2
+	WHERE s1.id_client = s2.id_client
+	AND s1.totalPrice>s2.totalPrice
+	AND s1.dat > s2.dat
+	ORDER BY s1.id_client, s1.dat;
+--select * from top10idclients;
+
 CREATE VIEW top10clients AS
-	SELECT FIRST 10 name, totalPrice
-	FROM client,sale 
-	WHERE sale.id_client IN
-		(SELECT sale.id_client 
-		FROM sale
-		GROUP BY sale.id_client 
-		HAVING COUNT(sale.id_client) > 1)
-	AND sale.id_client = client.id_client
-	ORDER BY totalPrice DESC;
---select * from top10clients;
+	SELECT FIRST 10 c.id_client, c.name 
+	FROM top10idclients as top, client as c
+	WHERE top.id_client = c.id_client
+	GROUP BY c.id_client,c.name;
+select * from top10clients;	
 
 commit;
 
