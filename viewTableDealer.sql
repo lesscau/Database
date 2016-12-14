@@ -159,7 +159,7 @@ CREATE VIEW top10clients AS
 	FROM top10idclients as top, client as c
 	WHERE top.id_client = c.id_client
 	GROUP BY c.id_client,c.name;
-select * from top10clients;	
+select * from top10clients;		
 
 commit;
 
